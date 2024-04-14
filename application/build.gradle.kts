@@ -18,16 +18,14 @@ tasks.getByName("jar") {
 dependencies {
         implementation(project(":application:inquire-application"))
         implementation(project(":application:sync-application"))
-    implementation("org.springframework.boot:spring-boot-starter-web")
 }
 
 
 allprojects{
     dependencies {
+        implementation("org.springframework.boot:spring-boot-starter-web")
         implementation(project(":domain"))
         runtimeOnly(project(":internal"))
-        implementation("org.springframework.boot:spring-boot-starter-web")
-
     }
 
 }
