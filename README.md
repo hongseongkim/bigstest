@@ -20,5 +20,7 @@ API
 URI
   sync
     ex) http://localhost:8095/sync?baseDate=20240414
+
+    
   inquire
     ex) http://localhost:8095/inquire?fcstDate=20240414
