@@ -15,7 +15,7 @@ class InquireRestController(
 
     @GetMapping("/inquire")
     fun inquire(
-        @RequestParam("baseDate") fcstDate: String): ResponseEntity<Any> {
+        @RequestParam("fcstDate") fcstDate: String): ResponseEntity<Any> {
 
         val weatherForecasts = weatherService.getForecast(fcstDate)
 

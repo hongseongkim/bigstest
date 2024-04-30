@@ -7,8 +7,8 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = ["com.example.internal.repository"])
-@EntityScan(basePackages = ["com.example.domain.entity"])
+@EnableJpaRepositories(basePackages = ["com.example.internal"])
+@EntityScan(basePackages = ["com.example.domain"])
 @ComponentScan(basePackages = ["com.example"])
 class BigsTestApplication
 

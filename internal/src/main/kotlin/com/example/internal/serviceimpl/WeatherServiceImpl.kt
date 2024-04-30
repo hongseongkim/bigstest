@@ -4,10 +4,9 @@ import com.example.domain.entity.WeatherForecast
 import com.example.domain.service.WeatherService
 import com.example.internal.repository.WeatherForecastRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-@Service
+
 class WeatherServiceImpl @Autowired constructor(
     private val weatherForecastRepository: WeatherForecastRepository
 ) : WeatherService {

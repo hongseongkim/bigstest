@@ -1,4 +1,4 @@
-package com.example.com.example.Sync
+package com.example
 
 data class WeatherForecastDto(
     var id: Long? = null,
