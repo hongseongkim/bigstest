@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.example.domain.entity.WeatherForecast
 import com.example.domain.service.WeatherService
+import org.springframework.web.util.UriComponentsBuilder
+
 @Service
 class SyncService(
     private val weatherService: WeatherService
@@ -19,18 +21,22 @@ class SyncService(
     fun syncForecastInfo(baseDate: String) {
         val restTemplate = RestTemplate()
         val apiUrl = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
-        val serviceKey = "5ujUAyGTxZ442ja0WByzWCh/laRSESQzH/S4nJegNAggfLaVOb6yYPBbEdyoz5HS56J167m3Z03IAcuqp0GUYg=="
-        val pageNo = "1"
-        val numOfRows = "809"
-        val dataType = "JSON"
-        val baseTime = "0500"
-        val nx = "62"
-        val ny = "130"
-        val url = "$apiUrl?serviceKey=$serviceKey&pageNo=$pageNo&numOfRows=$numOfRows&dataType=$dataType&base_date=$baseDate&base_time=$baseTime&nx=$nx&ny=$ny"
+
+
+        val uriBuilder: UriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(apiUrl)
+            .queryParam("serviceKey", "5ujUAyGTxZ442ja0WByzWCh/laRSESQzH/S4nJegNAggfLaVOb6yYPBbEdyoz5HS56J167m3Z03IAcuqp0GUYg==")
+            .queryParam("pageNo", "1")
+            .queryParam("numOfRows", "809")
+            .queryParam("dataType", "JSON")
+            .queryParam("base_date", "0500")
+            .queryParam("base_time", "0500")
+            .queryParam("nx", "62")
+            .queryParam("ny", "130")
+
 
 
         try {
-            val response: ResponseEntity<String> = restTemplate.exchange(url, HttpMethod.GET, null, String::class.java)
+            val response: ResponseEntity<String> = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, null, String::class.java)
             response.body?.let { jsonData ->
                 val weatherForecastList = convertJsonToDto(jsonData)
                 weatherService.saveAll(weatherForecastList.map { it.toEntity() }) // DTO를 엔티티로 변환하여 저장
