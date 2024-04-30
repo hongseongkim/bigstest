@@ -18,20 +18,14 @@ class SyncRestController(
 
         val today = LocalDate.now()
 
-        try {
+
 
             val inputDate = LocalDate.parse(baseDate, DateTimeFormatter.BASIC_ISO_DATE)
-            if (inputDate != today && inputDate != today.plusDays(1) && inputDate != today.minusDays(1)) {
-                return "입력한 $baseDate 는 어제,오늘,내일 중 하나여야 합니다."
-            }
-
-            syncService.syncForecastInfo(baseDate)
-
-        } catch (e: Exception) {
-            return "데이터를 저장하는데 실패하셨습니다.: ${e.message}"
+        if (inputDate.isAfter(today.minusDays(3)) && inputDate.isBefore(today.plusDays(1))) {
+            return syncService.syncForecastInfo(baseDate);
         }
+                return "입력하신 baseDate: $baseDate 는 오늘을 포함한 최근 3일 이여야 합니다."
 
-        return "성공"
 
     }
 

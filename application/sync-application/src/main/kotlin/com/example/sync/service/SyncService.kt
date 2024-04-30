@@ -18,11 +18,14 @@ class SyncService(
 
     private val objectMapper = ObjectMapper()
 
-    fun syncForecastInfo(baseDate: String) {
+    fun syncForecastInfo(baseDate: String) :String{
         val restTemplate = RestTemplate()
+        val apiUrl = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
+        val serviceKey = "5ujUAyGTxZ442ja0WByzWCh/laRSESQzH/S4nJegNAggfLaVOb6yYPBbEdyoz5HS56J167m3Z03IAcuqp0GUYg=="
 
-        val uriBuilder = UriComponentsBuilder.fromHttpUrl("https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst")
-            .queryParam("serviceKey","5ujUAyGTxZ442ja0WByzWCh/laRSESQzH/S4nJegNAggfLaVOb6yYPBbEdyoz5HS56J167m3Z03IAcuqp0GUYg==")
+
+        val uriBuilder = UriComponentsBuilder.fromHttpUrl(apiUrl)
+            .queryParam("serviceKey",serviceKey)
             .queryParam("pageNo","1")
             .queryParam("numOfRows","809")
             .queryParam("dataType","JSON")
@@ -31,17 +34,22 @@ class SyncService(
             .queryParam("nx","62")
             .queryParam("ny","130")
 
-        val url = uriBuilder.build().toUri()
 
-        try {
+        val url = uriBuilder.build().toUri();
+
+        println("url = ${url.toString()}")
+
+        return try {
             val response: ResponseEntity<String> = restTemplate.exchange(url, HttpMethod.GET, null, String::class.java)
-            response.body?.let { jsonData ->
-                val weatherForecastList = convertJsonToDto(jsonData)
-                weatherService.saveAll(weatherForecastList.map { it.toEntity() }) // DTO를 엔티티로 변환하여 저장
+            if (response.body != null) {
+                val weatherForecastList = convertJsonToDto(response.body!!)
+                weatherService.saveAll(weatherForecastList.map { it.toEntity() })
+                "성공"
+            } else {
+                "실패"
             }
-        } catch (e: Exception) {
-
-            e.printStackTrace()
+        } catch (e: NullPointerException) {
+            "요청하신 $baseDate 해당 날짜의 데이터가 api에서 제공되지 않았습니다."
         }
     }
 
